@@ -39,6 +39,11 @@ export default function Projects() {
       media: "/image/Triline_website.webm",
       live: "https://trilineinfotech.com/",
     },
+    {
+      title: "India Eventually",
+      media: "/image/IndiaEventually.webm",
+      live: "https://indiaeventually.com/",
+    },
   ];
 
   return (
@@ -52,11 +57,11 @@ export default function Projects() {
         <div className="absolute w-96 h-96 bg-blue-200 dark:bg-blue-900/30 rounded-full blur-3xl opacity-20 -top-48 -left-48 animate-pulse"></div>
         <div className="absolute w-96 h-96 bg-yellow-200 dark:bg-yellow-900/30 rounded-full blur-3xl opacity-20 -bottom-48 -right-48 animate-pulse" style={{animationDelay:'2s'}}></div>
         <svg className="absolute w-full h-full opacity-10 dark:opacity-5 animate-updown" viewBox="0 0 1000 1000">
-          <circle cx="100" cy="100" r="50" stroke="currentColor" fill="none" className="text-blue-400"/>
-          <circle cx="900" cy="200" r="30" stroke="currentColor" fill="none" className="text-yellow-400"/>
-          <circle cx="500" cy="800" r="40" stroke="currentColor" fill="none" className="text-blue-400"/>
-          <line x1="100" y1="100" x2="500" y2="500" stroke="currentColor" className="text-blue-300"/>
-          <line x1="900" y1="200" x2="500" y2="500" stroke="currentColor" className="text-yellow-300"/>
+          <circle cx="100" cy="100" r="50" stroke="currentColor" fill="none" className="text-blue-600"/>
+          <circle cx="900" cy="200" r="30" stroke="currentColor" fill="none" className="text-yellow-600"/>
+          <circle cx="500" cy="800" r="40" stroke="currentColor" fill="none" className="text-blue-600"/>
+          <line x1="100" y1="100" x2="500" y2="500" stroke="currentColor" className="text-blue-600"/>
+          <line x1="900" y1="200" x2="500" y2="500" stroke="currentColor" className="text-yellow-600"/>
         </svg>
       </div>
 

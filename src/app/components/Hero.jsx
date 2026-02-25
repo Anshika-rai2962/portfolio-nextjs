@@ -86,11 +86,11 @@ export default function Hero() {
         
         {/* Geometric decorative elements */}
         <svg className="absolute w-full h-full opacity-10 dark:opacity-5 animate-updown" viewBox="0 0 1000 1000">
-          <circle cx="100" cy="100" r="50" stroke="currentColor" fill="none" className="text-blue-400"/>
-          <circle cx="900" cy="200" r="30" stroke="currentColor" fill="none" className="text-yellow-400"/>
-          <circle cx="500" cy="800" r="40" stroke="currentColor" fill="none" className="text-blue-400"/>
-          <line x1="100" y1="100" x2="500" y2="500" stroke="currentColor" className="text-blue-300"/>
-          <line x1="900" y1="200" x2="500" y2="500" stroke="currentColor" className="text-yellow-300"/>
+          <circle cx="100" cy="100" r="50" stroke="currentColor" fill="none" className="text-blue-600"/>
+          <circle cx="900" cy="200" r="30" stroke="currentColor" fill="none" className="text-yellow-600"/>
+          <circle cx="500" cy="800" r="40" stroke="currentColor" fill="none" className="text-blue-600"/>
+          <line x1="100" y1="100" x2="500" y2="500" stroke="currentColor" className="text-blue-600"/>
+          <line x1="900" y1="200" x2="500" y2="500" stroke="currentColor" className="text-yellow-600"/>
         </svg>
       </div>
 
