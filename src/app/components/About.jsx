@@ -6,8 +6,8 @@ import ParticleBackground from "./ParticleBackground";
 export default function About() {
   const handleResumeDownload = () => {
     const link = document.createElement('a');
-    link.href = '/Anshika_Rai_Clickable_CV.docx'; // Place your CV.pdf in public folder
-    link.download = 'Anshika_Rai_Clickable_CV.docx';
+    link.href = '/Anshika_Rai.pdf'; 
+    link.download = 'Anshika_Rai.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
