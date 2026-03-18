@@ -5,13 +5,49 @@ import { FiHeadphones } from "react-icons/fi";
 
 export default function Contact() {
     const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
+    const [loading, setLoading] = useState(false);
+    const [status, setStatus] = useState("");
+    const [message, setMessage] = useState("");
 
     const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        alert("Message sent successfully 🚀");
-        setForm({ name: "", email: "", phone: "", message: "" });
+        setLoading(true);
+        setStatus("");
+        setMessage("");
+
+        try {
+            const response = await fetch("/api/contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setStatus("success");
+                setMessage("Message sent successfully! 🚀");
+                setForm({ name: "", email: "", phone: "", message: "" });
+                // Auto-hide success message after 5 seconds
+                setTimeout(() => setMessage(""), 5000);
+            } else {
+                setStatus("error");
+                setMessage(`Error: ${data.error} ${data.details ? `- ${data.details}` : ""}`);
+                console.error("Send error details:", data);
+                // Auto-hide error message after 8 seconds
+                setTimeout(() => setMessage(""), 8000);
+            }
+        } catch (error) {
+            setStatus("error");
+            setMessage("Failed to send message. Please try again.");
+            console.error("Error:", error);
+            // Auto-hide error message after 8 seconds
+            setTimeout(() => setMessage(""), 8000);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -49,6 +85,7 @@ export default function Contact() {
                                 <p className="text-gray-600 dark:text-gray-300 mt-2">Have a project or want to say hi? Fill out the form and I'll get back to you.</p>
                             </div>
 
+
                             <form onSubmit={handleSubmit} className="space-y-5">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                     <div>
@@ -75,9 +112,26 @@ export default function Contact() {
                                     <div />
                                     <div className="flex items-center gap-4">
                                         <button type="button" onClick={() => { setForm({ name: '', email: '', phone: '', message: '' }); }} className="px-4 py-2 rounded-full border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">Reset</button>
-                                        <button type="submit" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-purple-700 hover:bg-purple-800 text-white font-semibold transition-shadow shadow-lg">Send Message</button>
+                                        <button type="submit" disabled={loading} className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-purple-700 hover:bg-purple-800 disabled:bg-gray-400 text-white font-semibold transition-shadow shadow-lg">
+                                            {loading ? "Sending..." : "Send Message"}
+                                        </button>
                                     </div>
                                 </div>
+                                {/* Status Message */}
+                                {message && (
+                                <div className={`mb-6 p-4 rounded-lg border transition-all duration-300 ${
+                                    status === "success"
+                                        ? "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-800 dark:text-green-200"
+                                        : "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-800 dark:text-red-200"
+                                }`}>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-lg">
+                                            {status === "success" ? "✉️" : "❌"}
+                                        </span>
+                                        <p className="text-sm font-medium">{message}</p>
+                                    </div>
+                                </div>
+                            )}
                             </form>
                         </div>
                     </div>

@@ -7,13 +7,15 @@ export default function ChatWindow({ isOpen, onClose }) {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Hi there! 👋 How can I help you today?",
+      text: "Hi there! 👋 I'm Anshika. How can I help you today?",
       sender: "bot",
       timestamp: new Date(),
     },
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [visitorInfo, setVisitorInfo] = useState({ name: "", email: "" });
+  const [showInfoForm, setShowInfoForm] = useState(false);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -28,6 +30,12 @@ export default function ChatWindow({ isOpen, onClose }) {
     e.preventDefault();
     if (!inputValue.trim()) return;
 
+    // If first message and no visitor info, ask for it
+    if (messages.length === 1 && !visitorInfo.name) {
+      setShowInfoForm(true);
+      return;
+    }
+
     // Add user message
     const userMessage = {
       id: messages.length + 1,
@@ -37,33 +45,53 @@ export default function ChatWindow({ isOpen, onClose }) {
     };
 
     setMessages((prev) => [...prev, userMessage]);
+    const messageToSend = inputValue;
     setInputValue("");
     setIsLoading(true);
 
-    // Simulate bot response
-    setTimeout(() => {
-      const botResponses = [
-        "That's great! Tell me more about your project ideas.",
-        "I'd love to help you with that. What technologies are you interested in?",
-        "Sounds interesting! Feel free to reach out via email at anshikarai2962@gmail.com",
-        "Thanks for your message! I'll get back to you soon. 😊",
-        "Let's connect on LinkedIn: linkedin.com/in/anshika-rai-b71bb2272/",
-        "I'm excited to discuss this further! What would you like to know?",
-      ];
+    try {
+      // Send message to your email
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: messageToSend,
+          visitorName: visitorInfo.name,
+          visitorEmail: visitorInfo.email,
+        }),
+      });
 
-      const randomResponse =
-        botResponses[Math.floor(Math.random() * botResponses.length)];
-
-      const botMessage = {
+      if (response.ok) {
+        // Show confirmation that message was sent
+        const confirmationMessage = {
+          id: messages.length + 2,
+          text: "Thanks for your message! I've received it and will get back to you soon. 📧",
+          sender: "bot",
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, confirmationMessage]);
+      } else {
+        // Show error message
+        const errorMessage = {
+          id: messages.length + 2,
+          text: "Sorry, there was an issue sending your message. Please try the contact form instead.",
+          sender: "bot",
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, errorMessage]);
+      }
+    } catch (error) {
+      console.error("Chat error:", error);
+      const errorMessage = {
         id: messages.length + 2,
-        text: randomResponse,
+        text: "Connection error. Please use the contact form to reach me.",
         sender: "bot",
         timestamp: new Date(),
       };
-
-      setMessages((prev) => [...prev, botMessage]);
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
       setIsLoading(false);
-    }, 800);
+    }
   };
 
   if (!isOpen) return null;
@@ -141,6 +169,51 @@ export default function ChatWindow({ isOpen, onClose }) {
         <div ref={messagesEndRef} />
       </div>
 
+      {/* Visitor Info Form */}
+      {showInfoForm && (
+        <div className="border-t border-gray-200 dark:border-slate-700 p-4 bg-blue-50 dark:bg-slate-700">
+          <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
+            Before we chat, could you tell me your name and email? (optional)
+          </p>
+          <div className="space-y-2">
+            <input
+              type="text"
+              placeholder="Your name"
+              value={visitorInfo.name}
+              onChange={(e) => setVisitorInfo(prev => ({ ...prev, name: e.target.value }))}
+              className="w-full px-3 py-2 text-sm rounded-md bg-white dark:bg-slate-600 border border-gray-200 dark:border-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              type="email"
+              placeholder="Your email (optional)"
+              value={visitorInfo.email}
+              onChange={(e) => setVisitorInfo(prev => ({ ...prev, email: e.target.value }))}
+              className="w-full px-3 py-2 text-sm rounded-md bg-white dark:bg-slate-600 border border-gray-200 dark:border-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <div className="flex gap-2">
+              <button
+                onClick={() => {
+                  setShowInfoForm(false);
+                  // Now send the original message
+                  if (inputValue.trim()) {
+                    handleSendMessage({ preventDefault: () => {} });
+                  }
+                }}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-md transition-colors"
+              >
+                Continue
+              </button>
+              <button
+                onClick={() => setShowInfoForm(false)}
+                className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white text-sm rounded-md transition-colors"
+              >
+                Skip
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Input Area */}
       <form
         onSubmit={handleSendMessage}
@@ -151,12 +224,13 @@ export default function ChatWindow({ isOpen, onClose }) {
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Type a message..."
-            className="flex-1 px-4 py-2 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-900 dark:text-white border border-gray-200 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-purple-600 placeholder-gray-500 dark:placeholder-gray-400"
+            placeholder={showInfoForm ? "Please fill the form above first..." : "Type a message..."}
+            disabled={showInfoForm}
+            className="flex-1 px-4 py-2 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-900 dark:text-white border border-gray-200 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-purple-600 placeholder-gray-500 dark:placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
           />
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || showInfoForm}
             className="p-2 rounded-full bg-purple-600 hover:bg-purple-700 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             aria-label="Send message"
           >
