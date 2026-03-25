@@ -6,8 +6,8 @@ import { FaDownload } from "react-icons/fa6";
 export default function Footer() {
   const handleDownload = () => {
     const link = document.createElement("a");
-    link.href = "/Anshika_Rai.pdf"; 
-    link.download = "Anshika_Rai.pdf";
+    link.href = "/Anshika_Rai_Resume.pdf"; 
+    link.download = "Anshika_Rai_Resume.pdf";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

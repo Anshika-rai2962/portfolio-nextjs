@@ -6,8 +6,8 @@ import ParticleBackground from "./ParticleBackground";
 export default function About() {
   const handleResumeDownload = () => {
     const link = document.createElement('a');
-    link.href = '/Anshika_Rai.pdf'; 
-    link.download = 'Anshika_Rai.pdf';
+    link.href = '/Anshika_Rai_Resume.pdf'; 
+    link.download = 'Anshika_Rai_Resume.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
