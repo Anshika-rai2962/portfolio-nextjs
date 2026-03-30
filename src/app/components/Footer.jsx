@@ -22,7 +22,6 @@ export default function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Column 1 - Brand */}
         <div>
           <a href="#home" className="flex items-center gap-1 mb-4">
             <img
@@ -64,7 +63,7 @@ export default function Footer() {
         {/* Column 3 - Contact Info */}
         <div className="text-gray-700 dark:text-gray-300">
           <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Contact Info</h4>
-          <div className="flex items-center gap-3 mb-2"><FaPhone /> <span>+91 8858746325</span></div>
+          <div className="flex items-center gap-3 mb-2"><FaPhone /> <span>+91 xxx xxx 6325</span></div>
           <div className="flex items-center gap-3 mb-2"><FaEnvelope /> <span>anshikarai2962@gmail.com</span></div>
           <div className="flex items-center gap-3 mb-4"><FaMapMarkerAlt /> <span>Noida Uttar Pradesh</span></div>
 
